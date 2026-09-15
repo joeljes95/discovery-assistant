@@ -1,7 +1,7 @@
 ## 1. Foundation
 
-- [ ] 1.1 Install `@anthropic-ai/sdk` and `zod`, add `.env.example` with `ANTHROPIC_API_KEY`, and verify `npm run build` still passes
-- [ ] 1.2 Write the project `CLAUDE.md` (stack, scope, non-goals, rules: no secrets, honest README, commit per task) and verify it is committed
+- [x] 1.1 Install `@anthropic-ai/sdk` and `zod`, add `.env.example` with `ANTHROPIC_API_KEY`, and verify `npm run build` still passes
+- [x] 1.2 Write the project `CLAUDE.md` (stack, scope, non-goals, rules: no secrets, honest README, commit per task) and verify it is committed
 - [ ] 1.3 Create the synthetic portfolio file with 8-10 past projects (id, client, industry, problem, solution, stack, effort, year) and verify it type-checks and exports a typed array
 
 ## 2. Analysis endpoint
