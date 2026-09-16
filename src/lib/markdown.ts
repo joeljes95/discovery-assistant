@@ -8,10 +8,18 @@ export interface Review {
   notes: string;
 }
 
+/**
+ * One map for the screen and the export, so the word a reviewer clicks is the word that
+ * reaches the proposal document.
+ *
+ * "Not now" rather than "Discard": a rejected proposal stays in the exported brief, with the
+ * reviewer's reason attached, so nobody proposes the same thing again in three months.
+ * "Discard" promised a deletion that does not happen.
+ */
 export const VERDICT_LABEL: Record<Verdict, string> = {
   worth_it: "Worth it",
   inspiration: "Inspiration",
-  discard: "Discard",
+  discard: "Not now",
 };
 
 const EFFORT_LABEL = { S: "S (< 2 weeks)", M: "M (2-6 weeks)", L: "L (> 6 weeks)" };
