@@ -92,6 +92,13 @@ model. The exact token counts and cost are shown in the UI after every run.
 brief, not the review — so a database would have been setup cost with no user-visible
 benefit. Ten projects also fit comfortably in the prompt.
 
+**The UI has no brand colour, on purpose.** Emerald, sky, amber, rose and violet are already
+carrying meaning on this screen — reuse levels, verdicts and the three error categories — so
+an added accent hue would compete with information. The interface shell is neutral (slate),
+and the only colour on it is semantic. What makes it feel finished is structure: a header
+that names the tool and reports whether the analysis service is configured, an idle screen
+that explains the workflow before anything is pasted, and one type scale.
+
 **Matching is done by putting the whole portfolio in the prompt, not by embeddings.** Ten
 short project cards are under a thousand tokens. The model compares the client's problem to
 every project and explains why, which is exactly what the reviewer wants to read. Embeddings
@@ -139,6 +146,9 @@ Being explicit, because some of this is load-bearing:
 - **The sample call is invented too**, including the company and the people in it.
 - **Nothing persists.** Reload the page and the brief and your verdicts are gone. There is no
   database, no auth, no user accounts.
+- **The UI was verified by hand, not by tests.** The idle screen and the not-configured
+  indicator were checked against a running server; the loading, error and result states were
+  checked before the colour rename and not re-checked after it.
 - **No audio.** Voice recording and transcription were explicitly cut from v0. The input is
   pasted text.
 - **Long transcripts are rejected, not chunked.** Anything over 20,000 characters (roughly a
@@ -175,6 +185,11 @@ Being explicit, because some of this is load-bearing:
 4. **An eval for the matching.** Fifteen or twenty hand-labelled calls with the expected reuse
    level per proposal, so prompt changes can be measured instead of eyeballed.
 5. **Chunking for long transcripts**, replacing the hard character cap.
+6. **One of the two UI directions that were mocked but not built.** A *client-ready document*
+   treatment, where the brief renders on a light sheet with a serif for the generated prose so
+   the screen and the exported markdown are the same artifact; or a *review workspace*, two
+   panes with the source notes beside the brief and a persistent footer tracking how much of
+   the review is left. The shipped shell is deliberately the smallest of the three.
 
 ## Planning artifacts
 
