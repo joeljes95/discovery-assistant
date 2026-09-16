@@ -124,7 +124,11 @@ Being explicit, because some of this is load-bearing:
   (`npm test`). Everything else was verified by hand — every error path with curl, and both
   branches of the retry by temporarily injecting a schema failure. The route, the prompt and
   the UI have no automated coverage.
-- **No deploy.** It runs locally only.
+- **The deployed endpoint has no rate limit and no auth.** That is fine locally and is a real
+  hole in public hosting: anyone with the URL can spend the configured API key at roughly 9
+  cents a call. The deployment is kept behind Vercel's deployment protection for that reason.
+  A production version needs a per-IP limit and a daily spend ceiling before the protection
+  comes off.
 
 ## What I would do next, with one more week
 
