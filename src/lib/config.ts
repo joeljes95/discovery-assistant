@@ -21,11 +21,15 @@ export const PRICE_PER_MTOK = {
 /**
  * Hard ceiling on one analysis call. Bounds the request and the user's wait.
  *
- * Measured: a 1,958-character sample takes ~42s at medium effort. The original 60s budget
- * left no room for a full-length transcript, which is several times larger, so this is 120s.
- * The failure is handled either way, but timing out a valid call is a bad default.
+ * Measured: a 1,958-character sample took ~42s at medium effort, and ~95s after the reuse
+ * rules were tightened, because the model reasons per proposal. A 60,000-character transcript
+ * is the case this has to hold, so the budget is 240s. Vercel's function ceiling is 300s,
+ * which this stays inside.
+ *
+ * The failure is handled either way, but timing out a valid call is a bad default: the user
+ * waits the full budget and learns nothing, where the length cap would have told them at once.
  */
-export const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS ?? 120_000);
+export const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS ?? 240_000);
 
 /**
  * Thinking depth. The task is extraction plus matching over a short context, which does not
@@ -43,8 +47,14 @@ export const MAX_OUTPUT_TOKENS = 16_000;
 
 /**
  * Spend guard for the public deployment. Defaults are sized for a demo: a reviewer can run
- * several analyses back to back, and the worst case for the day is bounded at roughly
- * DAILY_MAX * ~$0.09. Raise them with env vars, never by editing this file in a hurry.
+ * several analyses back to back, and the worst case for the day is bounded at
+ * DAILY_MAX * the cost of one analysis.
+ *
+ * That unit cost is no longer ~$0.09. With the input cap at 60,000 characters a full-length
+ * transcript is roughly 18,000 input tokens, so one analysis runs $0.20-0.25 and the
+ * worst-case day at the default cap is around $12, not $4.50. Lower RATE_LIMIT_DAILY_MAX if
+ * that ceiling is too high for the deployment; raise these with env vars, never by editing
+ * this file in a hurry.
  */
 export const RATE_LIMIT = {
   perIpMax: Number(process.env.RATE_LIMIT_PER_IP_MAX ?? 5),
