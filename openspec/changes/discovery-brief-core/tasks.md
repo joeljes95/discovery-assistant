@@ -15,13 +15,13 @@
 
 ## 3. UI
 
-- [ ] 3.1 Build the input page: textarea with live character counter against the cap, submit button with loading state, and error banner per category; verify the three error states render
+- [x] 3.1 Build the input page: textarea with live character counter against the cap, submit button with loading state, and error banner per category; verify the three error states render
 - [ ] 3.2 Render the brief: client summary, pains, proposals with effort and reuse badge showing the matched project's name, open questions, risk flags, warnings, and the cost line; verify with a real analysis of the sample notes
 - [ ] 3.3 Add the per-proposal review controls (worth it / inspiration / discard, notes) in client state; verify selecting and changing verdicts affects only that proposal
 - [ ] 3.4 Add "Copy as markdown" that builds the reviewed brief, writes it to the clipboard, confirms in the UI, and shows the markdown in a fallback textarea; verify pasted output includes verdicts and "not reviewed" for unmarked proposals
 
 ## 4. Health and wrap-up
 
-- [ ] 4.1 Implement `GET /api/health` returning status, model name and `llmConfigured` boolean; verify with curl with and without the key
+- [x] 4.1 Implement `GET /api/health` returning status, model name and `llmConfigured` boolean; verify with curl with and without the key
 - [ ] 4.2 Ship a sample discovery-call notes file in the repo for the demo and verify it produces a good brief end-to-end
 - [ ] 4.3 Run `npm run lint` and `npm run build` clean, update the README time log, and commit; verify the working tree is clean and pushed

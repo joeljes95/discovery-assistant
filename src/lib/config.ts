@@ -35,14 +35,7 @@ export const LLM_EFFORT = (process.env.LLM_EFFORT ?? "medium") as
 /** Enough room for the brief plus the model's thinking. */
 export const MAX_OUTPUT_TOKENS = 16_000;
 
-/** Below this there is nothing to analyze. */
-export const MIN_NOTES_CHARS = 50;
-
-/**
- * Roughly a 30-40 minute call. Past this the right answer is chunking, which is a later
- * change, not silently truncating the user's transcript.
- */
-export const MAX_NOTES_CHARS = 20_000;
+export { MAX_NOTES_CHARS, MIN_NOTES_CHARS } from "./limits";
 
 export function estimateUsd(inputTokens: number, outputTokens: number): number {
   return (
