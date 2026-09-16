@@ -154,6 +154,9 @@ All times are Lima time, Monday 15 September 2026.
 | Block | Time | What it produced |
 |---|---|---|
 | 1 | 18:15 – 18:30 | Read the assignment, chose Option B, scoped the slice down (cut audio, cut the database), created the private repo and the initial commit |
-| 2 | 18:30 – 18:47 | Next.js scaffold; OpenSpec proposal, three capability specs, design decisions and a 16-task plan, validated and committed before writing code |
-| 3 | 18:47 – 19:20 | Portfolio, zod schema, LLM client, analyze endpoint, retry, id guard, error mapping. Verified every error path with curl |
-| 4 | 19:20 – 19:45 | UI: input with counter, brief view, per-proposal review, markdown export. Browser-verified the input and error states |
+| 2 | 18:30 – 18:47 | Next.js scaffold; OpenSpec proposal, three capability specs, design decisions and a 16-task plan, validated and committed before any application code |
+| 3 | 18:47 – 18:55 | `AGENTS.md` working rules, dependencies, `.env.example` |
+| 4 | 18:55 – 19:09 | Portfolio, zod schema, LLM client, analyze endpoint, retry, id guard, error mapping. Every error path verified with curl |
+| 5 | 19:09 – 19:15 | UI: input with counter, brief view, per-proposal review, markdown export. Browser-verified the input and error states. First README |
+
+_Log continues below as work progresses._
