@@ -100,3 +100,40 @@ describe("a rejection does not consume quota", () => {
     }
   });
 });
+
+describe("snapshot", () => {
+  it("reports the configured limits", () => {
+    const snap = createSpendGuard(OPTIONS).snapshot(T0);
+    assert.equal(snap.perIpMax, 3);
+    assert.equal(snap.windowMs, 60_000);
+    assert.equal(snap.dailyMax, 5);
+  });
+
+  it("counts admitted analyses and ignores rejected ones", () => {
+    const guard = createSpendGuard(OPTIONS);
+    assert.equal(guard.snapshot(T0).dailyCountThisInstance, 0);
+    guard.check("1.1.1.1", T0);
+    guard.check("1.1.1.1", T0);
+    assert.equal(guard.snapshot(T0).dailyCountThisInstance, 2);
+    // Fourth call for this IP is rejected; the tally must not move.
+    guard.check("1.1.1.1", T0);
+    guard.check("1.1.1.1", T0);
+    assert.equal(guard.snapshot(T0).dailyCountThisInstance, 3, "a rejection was counted");
+  });
+
+  it("reads zero on a new day without waiting for a call to reset it", () => {
+    const guard = createSpendGuard(OPTIONS);
+    for (let i = 0; i < 3; i += 1) guard.check("1.1.1.1", T0);
+    const nextDay = Date.UTC(2026, 8, 16, 9, 0, 0);
+    assert.equal(guard.snapshot(nextDay).dailyCountThisInstance, 0);
+  });
+
+  it("does not itself reset the day, so polling health cannot clear the budget", () => {
+    const guard = createSpendGuard(OPTIONS);
+    for (let i = 0; i < 5; i += 1) guard.check(`10.0.0.${i}`, T0);
+    const nextDay = Date.UTC(2026, 8, 16, 9, 0, 0);
+    guard.snapshot(nextDay);
+    // Reading tomorrow must not have rolled the day over for a caller still on T0.
+    assert.equal(guard.check("10.0.0.99", T0).allowed, false, "snapshot cleared the cap");
+  });
+});

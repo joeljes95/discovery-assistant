@@ -1,6 +1,6 @@
 import { AnalyzeError, analyzeNotes } from "@/lib/analyze";
-import { MAX_NOTES_CHARS, MIN_NOTES_CHARS, RATE_LIMIT } from "@/lib/config";
-import { createSpendGuard } from "@/lib/rate-limit";
+import { MAX_NOTES_CHARS, MIN_NOTES_CHARS } from "@/lib/config";
+import { spendGuard } from "@/lib/guard";
 import {
   AnalyzeRequestSchema,
   type AnalyzeFailure,
@@ -24,12 +24,6 @@ function failure(
   const body: AnalyzeFailure = { error: { category, message, retryable } };
   return Response.json(body, { status: status ?? STATUS_BY_CATEGORY[category], headers });
 }
-
-/**
- * One guard per serverless instance. Module scope is what makes it survive between requests
- * on a warm instance; see the note in rate-limit.ts about what that does and does not buy.
- */
-const guard = createSpendGuard(RATE_LIMIT);
 
 /**
  * Vercel sets x-forwarded-for and the leftmost entry is the client. The header is spoofable,
@@ -74,7 +68,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   // Checked last of all the cheap checks: quota is spent by real analyses, not by typos.
-  const decision = guard.check(clientIp(request));
+  const decision = spendGuard.check(clientIp(request));
   if (!decision.allowed) {
     const message =
       decision.reason === "ip"

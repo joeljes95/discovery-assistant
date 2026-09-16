@@ -18,8 +18,21 @@ export type GuardDecision =
   | { allowed: true }
   | { allowed: false; reason: "ip" | "daily"; retryAfterSeconds: number };
 
+/**
+ * What the guard will admit, and what it has admitted. Read-only on purpose: reporting this
+ * must not be able to move the counters it reports.
+ */
+export type GuardSnapshot = {
+  perIpMax: number;
+  windowMs: number;
+  dailyMax: number;
+  /** Admitted analyses on THIS instance today. See the note above about instances. */
+  dailyCountThisInstance: number;
+};
+
 export type SpendGuard = {
   check(ip: string, now?: number): GuardDecision;
+  snapshot(now?: number): GuardSnapshot;
 };
 
 export type SpendGuardOptions = {
@@ -79,6 +92,19 @@ export function createSpendGuard(options: SpendGuardOptions): SpendGuard {
       hits.set(ip, recent);
       dailyCount += 1;
       return { allowed: true };
+    },
+
+    snapshot(now: number = Date.now()): GuardSnapshot {
+      // A stale count from yesterday would read as budget already spent, so report what a
+      // call right now would see. Deliberately does not reset the counters: reading is not
+      // an event, and a monitor polling health must not be able to clear the day's total.
+      const sameDay = dayKey(now) === day;
+      return {
+        perIpMax,
+        windowMs,
+        dailyMax,
+        dailyCountThisInstance: sameDay ? dailyCount : 0,
+      };
     },
   };
 }
