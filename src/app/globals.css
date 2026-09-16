@@ -8,8 +8,10 @@
 /* Single dark theme on purpose: this is an internal tool used right after a call, not a
    public site, and one theme is one thing to get right inside the timebox. */
 body {
-  background: #09090b;
-  color: #e4e4e7;
+  /* Slate rather than zinc: a cooler neutral reads less like an untouched default, and the
+     semantic colours (emerald, sky, amber, rose, violet) still sit on it cleanly. */
+  background: #0b0f14;
+  color: #e2e8f0;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
