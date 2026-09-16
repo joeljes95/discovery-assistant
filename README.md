@@ -40,13 +40,22 @@ invented notes from a hardware distributor, written in Spanish, deliberately mes
 Check it is configured correctly:
 
 ```bash
-npm test          # 22 tests over the id guard, the markdown export and the spend guard
+npm test          # 26 tests over the id guard, the markdown export and the spend guard
 curl -s localhost:3000/api/health
-# {"status":"ok","model":"claude-opus-5","llmConfigured":true,"portfolioProjects":10}
+# {"status":"ok","model":"claude-opus-5","llmConfigured":true,"portfolioProjects":10,
+#  "limits":{"perIpMax":5,"windowMs":600000,"dailyMax":50},
+#  "analysesAdmittedTodayThisInstance":0}
 ```
 
 `status` is `degraded` and `llmConfigured` is `false` when the key is missing. The endpoint
 never returns any part of the key.
+
+`limits` and the count are there so the spend guard can be checked without spending five real
+analyses to trip it. The limits alone would only prove the running build is current; the count
+is what shows the guard is being consulted, because it moves when an analysis is admitted and
+stays put when one is rejected. Read the name literally — it is the responding instance's
+tally, and on Vercel a second request may well be answered by a different instance reporting
+its own.
 
 Analyzing the sample takes about 40 seconds and costs roughly 9 US cents with the default
 model. The exact token counts and cost are shown in the UI after every run.
@@ -73,6 +82,7 @@ model. The exact token counts and cost are shown in the UI after every run.
 | `src/lib/analyze.ts` | Prompt, LLM call, retry, id guard, error mapping |
 | `src/lib/config.ts` | Model, prices, timeout, effort, spend caps. Everything tunable |
 | `src/lib/rate-limit.ts` | The spend guard: per-IP window and global daily cap |
+| `src/lib/guard.ts` | The one guard instance, shared by the analyze and health routes |
 | `src/app/api/analyze/route.ts` | Input validation and HTTP status mapping |
 | `src/app/page.tsx` | The whole UI: input, brief, review, export |
 
@@ -136,7 +146,7 @@ Being explicit, because some of this is load-bearing:
   would be worse than refusing it.
 - **The cost figure is an estimate**, computed from the returned token counts and a price
   constant in `src/lib/config.ts`. If prices change, that constant is wrong until updated.
-- **Thin test coverage.** Twenty-two tests cover the three pure functions where a silent
+- **Thin test coverage.** Twenty-six tests cover the three pure functions where a silent
   regression would actually hurt: the portfolio id guard, the markdown export, and the spend
   guard — the last one because a regression there costs money rather than breaking a screen
   (`npm test`). Everything else was verified by hand — every error path with curl, and both
