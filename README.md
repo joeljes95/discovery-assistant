@@ -7,6 +7,10 @@ result as markdown.
 
 Built for the AdoptAI technical challenge, **Option B: a tool for AdoptAI**.
 
+**Live:** <https://discovery-assistant-taupe.vercel.app> — open, no login. Health check:
+<https://discovery-assistant-taupe.vercel.app/api/health>. It is rate limited (see below); if
+you get a 429 you have hit the demo's spend cap, not a bug.
+
 ## Why this
 
 AdoptAI runs discovery calls every week. Two things happen after each one, and both are slow:
@@ -186,3 +190,4 @@ All times are Lima time, Monday 15 September 2026.
 | 8 | 19:55 – 20:10 | Reconciled the commit skill with what this repo needs, wrote `AI.md` |
 | 9 | 20:10 – 20:25 | Archived the change and synced the main specs. Added 13 tests over the id guard and the markdown export, and mutation-checked that they actually fail when those functions break |
 | 10 | 20:13 – 20:25 | Closed the spend hole the README had flagged, now that the deployment is public: per-IP and global daily caps on the analyze endpoint, 9 tests with an injected clock, and verification against a running server with the key blanked so the checks cost nothing. Reconciled the README, the flow diagram and `.env.example` (which still advertised the old 60s timeout) |
+| 11 | 20:25 – 20:45 | Wrote the OpenSpec change for the spend guard after the fact, archived it and synced the specs. Deployed: the push did not redeploy because the Vercel project had no Git connection, so it went out from the CLI and the live URL now runs the guard |
