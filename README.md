@@ -151,11 +151,20 @@ Being explicit, because some of this is load-bearing:
   checked before the colour rename and not re-checked after it.
 - **No audio.** Voice recording and transcription were explicitly cut from v0. The input is
   pasted text.
-- **Long transcripts are rejected, not chunked.** Anything over 20,000 characters (roughly a
-  30-40 minute call) is refused with a clear message. Silently truncating a user's transcript
-  would be worse than refusing it.
+- **Long transcripts are rejected, not chunked.** Anything over 60,000 characters (roughly 70
+  minutes of verbatim speech, at about 825 characters a minute) is refused with a clear
+  message. Silently truncating a user's transcript would be worse than refusing it. The cap
+  was 20,000 until it was measured against a real transcript rather than notes: that is about
+  25 minutes of talk, shorter than most discovery calls.
+- **A full-length transcript has not been run end to end.** The cap and the 240-second timeout
+  were raised together and the rejection boundary was exercised, but the largest input
+  actually analysed against the provider is a few thousand characters. A 60,000-character run
+  costs roughly $0.25 and takes minutes; it is the first thing to try before demoing with a
+  real recording.
 - **The cost figure is an estimate**, computed from the returned token counts and a price
-  constant in `src/lib/config.ts`. If prices change, that constant is wrong until updated.
+  constant in `src/lib/config.ts`. If prices change, that constant is wrong until updated. A
+  short set of notes costs about $0.10; a transcript at the cap is nearer $0.25, which puts
+  the worst-case day at the default spend guard around $12.
 - **Thin test coverage.** Twenty-six tests cover the three pure functions where a silent
   regression would actually hurt: the portfolio id guard, the markdown export, and the spend
   guard — the last one because a regression there costs money rather than breaking a screen
@@ -194,8 +203,10 @@ Being explicit, because some of this is load-bearing:
 ## Planning artifacts
 
 This was built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec). The
-proposal, the behaviour specs, the design decisions and the task breakdown are committed
-under `openspec/changes/discovery-brief-core/` and were written before any application code.
+proposal, the behaviour specs, the design decisions and the task breakdown were written before
+any application code. That change and the two that followed it are archived under
+`openspec/changes/archive/`, with the merged specs in `openspec/specs/`; the UI shell change
+is still open under `openspec/changes/brief-review-shell/` with every task checked.
 `AGENTS.md` (which `CLAUDE.md` points at) carries the working rules the AI coding agent
 followed. See `AI.md` for how the AI tooling was actually used, including what it got wrong.
 
@@ -217,3 +228,5 @@ All times are Lima time, Monday 15 September 2026.
 | 10 | 20:13 – 20:25 | Closed the spend hole the README had flagged, now that the deployment is public: per-IP and global daily caps on the analyze endpoint, 9 tests with an injected clock, and verification against a running server with the key blanked so the checks cost nothing. Reconciled the README, the flow diagram and `.env.example` (which still advertised the old 60s timeout) |
 | 11 | 20:25 – 20:45 | Wrote the OpenSpec change for the spend guard after the fact, archived it and synced the specs. Deployed: the push did not redeploy because the Vercel project had no Git connection, so it went out from the CLI and the live URL now runs the guard |
 | 12 | 20:45 – 20:55 | `/api/health` reports the spend limits and the analyses this instance has admitted today, so the guard can be checked without spending five analyses to trip it. Specified first this time: proposal committed with unchecked tasks, then implemented, then archived. Deployed and verified against the live URL |
+| 13 | 21:10 – 21:40 | An app shell: header with a status indicator fed by `/api/health`, an idle screen that explains the workflow, one type scale and a neutral palette. Two alternative UI directions were mocked and recorded in the README, not built. Renamed the discard verdict to "Not now" because a rejected proposal stays in the export |
+| 14 | 21:45 – 22:00 | Final check against the assignment. Found the live URL was still running the block 12 build, redeployed from the CLI, and fixed the time log and a stale OpenSpec path in this file |
