@@ -147,7 +147,7 @@ This was built spec-first with [OpenSpec](https://github.com/Fission-AI/OpenSpec
 proposal, the behaviour specs, the design decisions and the task breakdown are committed
 under `openspec/changes/discovery-brief-core/` and were written before any application code.
 `AGENTS.md` (which `CLAUDE.md` points at) carries the working rules the AI coding agent
-followed. See `AI.md` for how the AI tooling was actually used.
+followed. See `AI.md` for how the AI tooling was actually used, including what it got wrong.
 
 ## Time log
 
@@ -162,3 +162,4 @@ All times are Lima time, Monday 15 September 2026.
 | 5 | 19:09 – 19:15 | UI: input with counter, brief view, per-proposal review, markdown export. Browser-verified the input and error states. First README |
 | 6 | 19:15 – 19:30 | Blocked on an API key. Wrote the README while waiting |
 | 7 | 19:30 – 19:55 | First real analysis. Found the 60s timeout was too tight against a measured 42s, raised it to 120s and recorded the finding in `design.md`. Browser-verified the brief, the review controls and the markdown export. Exercised the retry by injecting a schema failure, both branches, then reverted |
+| 8 | 19:55 – 20:10 | Reconciled the commit skill with what this repo needs, wrote `AI.md` |
