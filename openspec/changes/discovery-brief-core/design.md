@@ -40,8 +40,8 @@ Configuration (missing key, auth error), transient (timeout, rate limit, provide
 **Cost estimate from returned usage and env-configured prices.**
 The provider returns input and output token counts. Prices per million tokens for the chosen model live in one config module (overridable by env) so switching models does not require touching the route. Displayed with the model name so the reviewer knows what produced the brief.
 
-**Model choice is env-configurable with a fast, cheap default.**
-The task is extraction and matching over a short context, which does not need the largest model. A mid-tier model keeps each analysis cheap and under the timeout. The exact default id and prices are set at implementation from the current pricing table.
+**Model choice is env-configurable; the default landed on a frontier model, not the mid-tier one planned here.**
+Planned: a mid-tier model, on the theory that extraction plus matching over a short context does not need the largest one. Implemented: `claude-opus-5` at medium effort, because the judgement the tool is actually selling is the reuse call, and a shallow match is worse than no match. Measured cost is about 9 cents and 42 seconds per analysis, which is cheap against the consultant hour it replaces but too slow and too expensive for a high-volume path. Both the model id and the effort level are single env vars, so stepping down is a config change once there is an eval to prove quality holds.
 
 **Review state lives in React state only; export builds markdown from it.**
 No persistence in this change. The markdown export is the "output" an operator actually takes to the CRM, so it includes verdicts and notes.
@@ -49,8 +49,8 @@ No persistence in this change. The markdown export is the "output" an operator a
 ## Risks / Trade-offs
 
 - [Model invents pains or proposals not grounded in the notes] → prompt instructs to cite only what the notes support and to put uncertainties under open questions; the reviewer is explicitly the last word in the UI.
-- [Mid-tier model gives shallow matches] → portfolio cards include problem and solution text, not just names, so matching has substance; model id is one env var away from upgrading.
-- [Timeout too tight for long inputs on a slow provider day] → timeout set at 60 seconds with the input cap keeping typical calls well under it.
+- [Cheaper model gives shallow matches] → resolved by defaulting to a frontier model; portfolio cards carry problem and solution text so matching has substance either way. The open risk is now the inverse: cost and latency per analysis are high enough that a volume use case would need a step down plus an eval.
+- [Timeout too tight for long inputs on a slow provider day] → originally 60 seconds. Measured during implementation: a 1,958-character sample takes ~42s at medium effort, so 60s left no headroom for a full-length transcript. Raised to 120 seconds; the input cap still bounds the worst case and the timeout error is handled and retryable.
 - [Cost display drifts from real prices] → prices are in one config module with a comment pointing to the pricing page; acceptable for an estimate, labeled as such in the UI.
 - [Timebox slips] → task order puts the end-to-end path first; failure handling and export come after the first working brief so a slip still leaves a demoable product.
 - [Clipboard API unavailable in insecure contexts] → local dev is on localhost which is a secure context; export also renders the markdown in a textarea as fallback.

@@ -43,8 +43,8 @@ curl -s localhost:3000/api/health
 `status` is `degraded` and `llmConfigured` is `false` when the key is missing. The endpoint
 never returns any part of the key.
 
-One analysis of the sample costs a few cents; the exact figure is shown in the UI after
-every run.
+Analyzing the sample takes about 40 seconds and costs roughly 9 US cents with the default
+model. The exact token counts and cost are shown in the UI after every run.
 
 ## How it works
 
@@ -118,9 +118,11 @@ Being explicit, because some of this is load-bearing:
   would be worse than refusing it.
 - **The cost figure is an estimate**, computed from the returned token counts and a price
   constant in `src/lib/config.ts`. If prices change, that constant is wrong until updated.
-- **No tests.** The id guard and the markdown export were verified by running them against
-  hand-built cases during development, not by a committed test suite. That is the first thing
-  I would fix.
+- **No committed test suite.** Everything was verified by hand and the evidence is real: the
+  id guard against four hand-built cases, every error path with curl, and the retry by
+  temporarily injecting a schema failure (first-attempt-fails and both-attempts-fail, then
+  reverted). None of that is locked down in CI, so it protects nothing against a future
+  change. That is the first thing I would fix.
 - **No deploy.** It runs locally only.
 
 ## What I would do next, with one more week
@@ -158,5 +160,5 @@ All times are Lima time, Monday 15 September 2026.
 | 3 | 18:47 – 18:55 | `AGENTS.md` working rules, dependencies, `.env.example` |
 | 4 | 18:55 – 19:09 | Portfolio, zod schema, LLM client, analyze endpoint, retry, id guard, error mapping. Every error path verified with curl |
 | 5 | 19:09 – 19:15 | UI: input with counter, brief view, per-proposal review, markdown export. Browser-verified the input and error states. First README |
-
-_Log continues below as work progresses._
+| 6 | 19:15 – 19:30 | Blocked on an API key. Wrote the README while waiting |
+| 7 | 19:30 – 19:55 | First real analysis. Found the 60s timeout was too tight against a measured 42s, raised it to 120s and recorded the finding in `design.md`. Browser-verified the brief, the review controls and the markdown export. Exercised the retry by injecting a schema failure, both branches, then reverted |
