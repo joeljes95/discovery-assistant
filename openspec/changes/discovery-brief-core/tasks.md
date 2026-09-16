@@ -24,4 +24,4 @@
 
 - [x] 4.1 Implement `GET /api/health` returning status, model name and `llmConfigured` boolean; verify with curl with and without the key
 - [x] 4.2 Ship a sample discovery-call notes file in the repo for the demo and verify it produces a good brief end-to-end
-- [ ] 4.3 Run `npm run lint` and `npm run build` clean, update the README time log, and commit; verify the working tree is clean and pushed
+- [x] 4.3 Run `npm run lint` and `npm run build` clean, update the README time log, and commit; verify the working tree is clean and pushed
