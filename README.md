@@ -36,6 +36,7 @@ invented notes from a hardware distributor, written in Spanish, deliberately mes
 Check it is configured correctly:
 
 ```bash
+npm test          # 13 tests over the id guard and the markdown export
 curl -s localhost:3000/api/health
 # {"status":"ok","model":"claude-opus-5","llmConfigured":true,"portfolioProjects":10}
 ```
@@ -118,28 +119,26 @@ Being explicit, because some of this is load-bearing:
   would be worse than refusing it.
 - **The cost figure is an estimate**, computed from the returned token counts and a price
   constant in `src/lib/config.ts`. If prices change, that constant is wrong until updated.
-- **No committed test suite.** Everything was verified by hand and the evidence is real: the
-  id guard against four hand-built cases, every error path with curl, and the retry by
-  temporarily injecting a schema failure (first-attempt-fails and both-attempts-fail, then
-  reverted). None of that is locked down in CI, so it protects nothing against a future
-  change. That is the first thing I would fix.
+- **Thin test coverage.** Thirteen tests cover the two pure functions where a silent
+  regression would actually mislead a user: the portfolio id guard and the markdown export
+  (`npm test`). Everything else was verified by hand — every error path with curl, and both
+  branches of the retry by temporarily injecting a schema failure. The route, the prompt and
+  the UI have no automated coverage.
 - **No deploy.** It runs locally only.
 
 ## What I would do next, with one more week
 
-1. **Tests where they protect something.** The portfolio id guard and the markdown export are
-   pure functions with real edge cases; they should be locked down before anything else.
-2. **Voice in.** Record or upload the call audio and transcribe it, so the consultant does
+1. **Voice in.** Record or upload the call audio and transcribe it, so the consultant does
    not have to type notes at all. This was the original idea and was cut on purpose — it is a
    second provider and a second failure mode, and the analysis is where the value is.
-3. **Persistence and a history view.** Briefs and verdicts in a database, so the reuse
+2. **Persistence and a history view.** Briefs and verdicts in a database, so the reuse
    decision is auditable later and so you can ask "what did we propose to clients like this".
-4. **Portfolio at scale.** Past a hundred projects the whole-portfolio prompt stops working.
+3. **Portfolio at scale.** Past a hundred projects the whole-portfolio prompt stops working.
    That is when embeddings plus top-k retrieval earn their complexity — and the retrieved
    candidates should still be shown to the reviewer with the reason.
-5. **An eval for the matching.** Fifteen or twenty hand-labelled calls with the expected reuse
+4. **An eval for the matching.** Fifteen or twenty hand-labelled calls with the expected reuse
    level per proposal, so prompt changes can be measured instead of eyeballed.
-6. **Chunking for long transcripts**, replacing the hard character cap.
+5. **Chunking for long transcripts**, replacing the hard character cap.
 
 ## Planning artifacts
 
@@ -163,3 +162,4 @@ All times are Lima time, Monday 15 September 2026.
 | 6 | 19:15 – 19:30 | Blocked on an API key. Wrote the README while waiting |
 | 7 | 19:30 – 19:55 | First real analysis. Found the 60s timeout was too tight against a measured 42s, raised it to 120s and recorded the finding in `design.md`. Browser-verified the brief, the review controls and the markdown export. Exercised the retry by injecting a schema failure, both branches, then reverted |
 | 8 | 19:55 – 20:10 | Reconciled the commit skill with what this repo needs, wrote `AI.md` |
+| 9 | 20:10 – 20:25 | Archived the change and synced the main specs. Added 13 tests over the id guard and the markdown export, and mutation-checked that they actually fail when those functions break |
