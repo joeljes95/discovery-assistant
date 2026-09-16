@@ -19,5 +19,6 @@ Rules:
 - Stage specific files by name, not `git add -A` or `git add .`.
 - Do NOT push to remote.
 - If there are no changes, say so and stop.
-- Do NOT add any co-author trailer or attribution. The commit must look like a normal human commit — no `Co-Authored-By`, no "Generated with Claude", no emoji signature, nothing referencing an AI.
+- **This repository overrides the usual no-attribution rule.** End every commit with a `Co-Authored-By` trailer naming the exact model that wrote it, e.g. `Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>`. Use the model actually configured for the session, not a generic "Claude". Rationale: this repo is a demonstration of an AI-assisted workflow, so which model did which work is part of what the history is meant to show — planning and execution were deliberately run on different models, and the trailers are the record of that split. Still no "Generated with Claude" lines, no emoji signature, nothing beyond the single trailer.
+- Never rewrite published history to add, remove or normalize these trailers. A rewrite preserves author dates but resets every commit date to the instant of the rewrite, which is visible in `git log --pretty=fuller` and on GitHub, and reads as laundered history. An inconsistent honest log beats a tidy misleading one.
 - Use HEREDOC format for the commit message to support multiline.
