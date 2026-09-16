@@ -1,5 +1,6 @@
 import { AnalyzeError, analyzeNotes } from "@/lib/analyze";
-import { MAX_NOTES_CHARS, MIN_NOTES_CHARS } from "@/lib/config";
+import { MAX_NOTES_CHARS, MIN_NOTES_CHARS, RATE_LIMIT } from "@/lib/config";
+import { createSpendGuard } from "@/lib/rate-limit";
 import {
   AnalyzeRequestSchema,
   type AnalyzeFailure,
@@ -18,9 +19,26 @@ function failure(
   message: string,
   retryable: boolean,
   status?: number,
+  headers?: HeadersInit,
 ): Response {
   const body: AnalyzeFailure = { error: { category, message, retryable } };
-  return Response.json(body, { status: status ?? STATUS_BY_CATEGORY[category] });
+  return Response.json(body, { status: status ?? STATUS_BY_CATEGORY[category], headers });
+}
+
+/**
+ * One guard per serverless instance. Module scope is what makes it survive between requests
+ * on a warm instance; see the note in rate-limit.ts about what that does and does not buy.
+ */
+const guard = createSpendGuard(RATE_LIMIT);
+
+/**
+ * Vercel sets x-forwarded-for and the leftmost entry is the client. The header is spoofable,
+ * which is why the global daily cap exists: it holds even when every request claims a
+ * different origin.
+ */
+function clientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  return forwarded?.split(",")[0]?.trim() || "unknown";
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -53,6 +71,18 @@ export async function POST(request: Request): Promise<Response> {
       false,
       400,
     );
+  }
+
+  // Checked last of all the cheap checks: quota is spent by real analyses, not by typos.
+  const decision = guard.check(clientIp(request));
+  if (!decision.allowed) {
+    const message =
+      decision.reason === "ip"
+        ? `Too many analyses from this address. Wait about ${Math.ceil(decision.retryAfterSeconds / 60)} minute(s) and try again.`
+        : "This demo has reached its daily analysis limit. It resets at midnight UTC.";
+    return failure("transient", message, decision.reason === "ip", 429, {
+      "retry-after": String(decision.retryAfterSeconds),
+    });
   }
 
   try {

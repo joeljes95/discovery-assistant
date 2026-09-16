@@ -41,6 +41,17 @@ export const LLM_EFFORT = (process.env.LLM_EFFORT ?? "medium") as
 /** Enough room for the brief plus the model's thinking. */
 export const MAX_OUTPUT_TOKENS = 16_000;
 
+/**
+ * Spend guard for the public deployment. Defaults are sized for a demo: a reviewer can run
+ * several analyses back to back, and the worst case for the day is bounded at roughly
+ * DAILY_MAX * ~$0.09. Raise them with env vars, never by editing this file in a hurry.
+ */
+export const RATE_LIMIT = {
+  perIpMax: Number(process.env.RATE_LIMIT_PER_IP_MAX ?? 5),
+  windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS ?? 600_000),
+  dailyMax: Number(process.env.RATE_LIMIT_DAILY_MAX ?? 50),
+};
+
 export { MAX_NOTES_CHARS, MIN_NOTES_CHARS } from "./limits";
 
 export function estimateUsd(inputTokens: number, outputTokens: number): number {
