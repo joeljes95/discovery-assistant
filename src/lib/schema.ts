@@ -25,7 +25,7 @@ export const ReuseSchema = z.object({
   level: z
     .enum(REUSE_LEVELS)
     .describe(
-      "reuse: a past project solves essentially the same problem and would be redeployed with configuration changes. adapt: a past project is a strong starting point but needs real new work. new: nothing in the portfolio is close.",
+      "reuse: a past project solves essentially the same problem and would be redeployed with configuration changes. adapt: a past project is a strong starting point and would be recognisable in what we deliver, with real new work on top. new: nothing in the portfolio is close. A shared generic pattern (a form, a dashboard, threshold alerts) is not a match: when the domain, the data and the integrations all differ, the level is new.",
     ),
   projectId: z
     .string()

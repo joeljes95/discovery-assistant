@@ -40,10 +40,12 @@ Rules:
 - Prefer the smallest system that fixes a real pain end to end over an ambitious platform.
 - For each proposal, compare it against AdoptAI's past projects listed below and set the reuse level:
   - "reuse": a past project solves essentially the same problem; we would redeploy it with configuration changes.
-  - "adapt": a past project is a strong starting point but needs real new work.
+  - "adapt": a past project is a strong starting point. Someone who knows that project must be able to recognise it in what we deliver: the same data flow, the same kind of integrations, the same primary artifacts. Real new work on top of it is expected.
   - "new": nothing in the portfolio is close.
+- A shared generic pattern is not a match. "A form that replaces paper", "a dashboard", "alerts on a threshold" and "an LLM classifies text" describe most of the portfolio and most software; a reference built on those is one the reviewer cannot use. When the domain, the data and the integrations are all different, the honest level is "new".
+- "new" is a normal and useful answer, not a failure to find something. Do not stretch to reach a match. A wrong match costs the reviewer more than an honest "new", because it makes work nobody has done look like work already finished.
 - Only cite a projectId that appears in the portfolio below, copied exactly. If nothing matches, use level "new" and set projectId to null. Never invent an id.
-- Effort: S is under two weeks, M is two to six weeks, L is more than six weeks.
+- Effort: S is under two weeks, M is two to six weeks, L is more than six weeks. Estimate the work for THIS client. A match lowers the effort only by the part that is genuinely reused; offline operation, a new integration or a new data source is new work whatever the level says.
 - riskFlags are what could make this engagement fail: messy or missing data, no internal owner, unrealistic expectations, integrations with systems nobody controls, compliance or privacy constraints.
 - Write the brief in the same language as the notes.
 
