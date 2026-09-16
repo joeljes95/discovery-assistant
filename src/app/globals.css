@@ -15,6 +15,55 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+/* Depth without a shape: one fixed wash lifting the ground toward the top of the screen, so
+   the page is not a flat rectangle of one colour. Deliberately not animated — ambient motion
+   behind a form is decoration, and this tool is used with a client on the phone. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(70rem 40rem at 50% -8rem, rgba(148, 163, 184, 0.1), transparent 70%),
+    radial-gradient(50rem 30rem at 85% 0%, rgba(56, 189, 248, 0.05), transparent 65%);
+}
+
+/* The one place motion does work: a 40-to-60-second wait needs to look like progress rather
+   than a stalled page. */
+.analyzing {
+  background: linear-gradient(
+    100deg,
+    var(--color-slate-500) 30%,
+    var(--color-slate-200) 50%,
+    var(--color-slate-500) 70%
+  );
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 2.5s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 140% 0;
+  }
+  to {
+    background-position: -40% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .analyzing {
+    animation: none;
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    color: var(--color-slate-400);
+  }
+}
+
 textarea {
   field-sizing: content;
 }

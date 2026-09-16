@@ -283,7 +283,7 @@ export default function Home() {
 
       <div aria-live="polite">
         {status === "loading" && (
-          <p className="mt-6 animate-pulse text-sm text-slate-400">
+          <p className="analyzing mt-6 text-sm text-slate-400">
             Reading the notes and comparing them against{" "}
             {health?.portfolioProjects ?? PORTFOLIO.length} past projects. This usually takes
             40 to 60 seconds.
