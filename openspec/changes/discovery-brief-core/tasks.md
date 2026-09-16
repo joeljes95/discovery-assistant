@@ -6,12 +6,12 @@
 
 ## 2. Analysis endpoint
 
-- [ ] 2.1 Define the brief zod schema (summary, pains, 2-3 proposals with effort S/M/L and reuse level/id/reason, open questions, risk flags) and verify a sample object parses
+- [x] 2.1 Define the brief zod schema (summary, pains, 2-3 proposals with effort S/M/L and reuse level/id/reason, open questions, risk flags) and verify a sample object parses
 - [ ] 2.2 Implement the LLM client module: model and prices config, system prompt with the portfolio rendered as cards, structured output bound to the schema, 60s timeout; verify a manual call returns a parsed brief
-- [ ] 2.3 Implement `POST /api/analyze`: reject inputs under 50 or over 20,000 characters before calling the LLM, call the client, and return brief plus usage and estimated cost; verify with curl for short, oversized and valid inputs
+- [x] 2.3 Implement `POST /api/analyze`: reject inputs under 50 or over 20,000 characters before calling the LLM, call the client, and return brief plus usage and estimated cost; verify with curl for short, oversized and valid inputs
 - [ ] 2.4 Add one retry on zod failure feeding the error back, and after two failures return a validation error; verify by forcing a bad schema once in dev
-- [ ] 2.5 Post-validate portfolio ids: unknown id downgrades that proposal to `new` and adds a warning; verify with a unit-style check that injects a fake id
-- [ ] 2.6 Map provider errors to configuration / transient / validation categories with plain-language messages; verify by running once without the API key and once with an invalid key
+- [x] 2.5 Post-validate portfolio ids: unknown id downgrades that proposal to `new` and adds a warning; verify with a unit-style check that injects a fake id
+- [x] 2.6 Map provider errors to configuration / transient / validation categories with plain-language messages; verify by running once without the API key and once with an invalid key
 
 ## 3. UI
 
