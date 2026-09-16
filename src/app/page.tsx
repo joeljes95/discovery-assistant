@@ -171,7 +171,7 @@ export default function Home() {
       {status === "loading" && (
         <p className="mt-6 animate-pulse text-sm text-zinc-400">
           Reading the notes and comparing them against {PORTFOLIO.length} past projects. This usually takes
-          20 to 40 seconds.
+          40 to 60 seconds.
         </p>
       )}
 

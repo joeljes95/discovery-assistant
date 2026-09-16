@@ -18,8 +18,14 @@ export const PRICE_PER_MTOK = {
   output: Number(process.env.PRICE_OUTPUT_PER_MTOK ?? 25),
 };
 
-/** Hard ceiling on one analysis call. Bounds the request and the user's wait. */
-export const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS ?? 60_000);
+/**
+ * Hard ceiling on one analysis call. Bounds the request and the user's wait.
+ *
+ * Measured: a 1,958-character sample takes ~42s at medium effort. The original 60s budget
+ * left no room for a full-length transcript, which is several times larger, so this is 120s.
+ * The failure is handled either way, but timing out a valid call is a bad default.
+ */
+export const LLM_TIMEOUT_MS = Number(process.env.LLM_TIMEOUT_MS ?? 120_000);
 
 /**
  * Thinking depth. The task is extraction plus matching over a short context, which does not
