@@ -15,5 +15,5 @@
 
 ## 4. Amend: raise the cap to 90,000
 
-- [ ] 4.1 Raise `MAX_NOTES_CHARS` to 90,000 and correct the speech-rate comment beside it; update the timeout and spend-guard comments in `src/lib/config.ts` and the README's limit and cost figures; verify no file still claims 60,000 as the cap
-- [ ] 4.2 `npm test && npm run lint && npm run build`, then check the 90,000/90,001 boundary against a running server
+- [x] 4.1 Raise `MAX_NOTES_CHARS` to 90,000 and correct the speech-rate comment beside it; update the timeout and spend-guard comments in `src/lib/config.ts` and the README's limit and cost figures; verify no file still claims 60,000 as the cap
+- [x] 4.2 `npm test && npm run lint && npm run build` clean. 90,001 characters is rejected in 0.12s with HTTP 400 and no provider call, naming the 90,000 limit; the page shows 90,000. As before, a full-length accepted run has not been made

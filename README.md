@@ -151,20 +151,20 @@ Being explicit, because some of this is load-bearing:
   checked before the colour rename and not re-checked after it.
 - **No audio.** Voice recording and transcription were explicitly cut from v0. The input is
   pasted text.
-- **Long transcripts are rejected, not chunked.** Anything over 60,000 characters (roughly 70
-  minutes of verbatim speech, at about 825 characters a minute) is refused with a clear
-  message. Silently truncating a user's transcript would be worse than refusing it. The cap
-  was 20,000 until it was measured against a real transcript rather than notes: that is about
-  25 minutes of talk, shorter than most discovery calls.
+- **Long transcripts are rejected, not chunked.** Anything over 90,000 characters is refused
+  with a clear message. That holds a fast one-hour call with room to spare, or 80-90 minutes
+  at a normal pace (conversational Spanish runs about 900-1,100 characters a minute).
+  Silently truncating a user's transcript would be worse than refusing it. The cap was 20,000,
+  sized for notes, then 60,000, which a real one-hour Whisper transcript went past.
 - **A full-length transcript has not been run end to end.** The cap and the 240-second timeout
   were raised together and the rejection boundary was exercised, but the largest input
-  actually analysed against the provider is a few thousand characters. A 60,000-character run
-  costs roughly $0.25 and takes minutes; it is the first thing to try before demoing with a
+  actually analysed against the provider is a few thousand characters. A 90,000-character run
+  costs roughly $0.30 and takes minutes; it is the first thing to try before demoing with a
   real recording.
 - **The cost figure is an estimate**, computed from the returned token counts and a price
   constant in `src/lib/config.ts`. If prices change, that constant is wrong until updated. A
-  short set of notes costs about $0.10; a transcript at the cap is nearer $0.25, which puts
-  the worst-case day at the default spend guard around $12.
+  short set of notes costs about $0.10; a transcript at the cap is nearer $0.30, which puts
+  the worst-case day at the default spend guard around $15.
 - **Thin test coverage.** Twenty-six tests cover the three pure functions where a silent
   regression would actually hurt: the portfolio id guard, the markdown export, and the spend
   guard — the last one because a regression there costs money rather than breaking a screen
