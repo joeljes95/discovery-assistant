@@ -12,3 +12,8 @@
 
 - [x] 3.1 `npm test && npm run lint && npm run build` — 26 tests pass, lint and build clean
 - [x] 3.2 Exercise the new boundary: 60,001 characters is rejected in 0.16s with HTTP 400 and no provider call, naming the 60,000 limit and the length sent. The accepting side was **not** exercised end to end: the largest input actually analysed is a few thousand characters, so the claim that a 60,000-character transcript completes inside the 240-second budget is reasoned from measured latency, not observed. Recorded in the README as untested
+
+## 4. Amend: raise the cap to 90,000
+
+- [ ] 4.1 Raise `MAX_NOTES_CHARS` to 90,000 and correct the speech-rate comment beside it; update the timeout and spend-guard comments in `src/lib/config.ts` and the README's limit and cost figures; verify no file still claims 60,000 as the cap
+- [ ] 4.2 `npm test && npm run lint && npm run build`, then check the 90,000/90,001 boundary against a running server
